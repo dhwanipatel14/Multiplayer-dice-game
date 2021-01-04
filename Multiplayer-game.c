@@ -122,3 +122,35 @@ void signal_handler(int signo){
 
 }
 
+void player_fifo(char *s) {
+
+	int fd1, fd2;
+
+	fd1 = open("../3rdplayer1.fifo", O_RDONLY);  
+	fd2 = open("../3rdplayer2.fifo", O_WRONLY);  
+
+	static int points=0;
+	int dice;
+	long int ss=0;  
+	
+	char turn;  
+	
+	while(1){ 
+		read(fd1, &turn, 1);   //child read from fifo
+
+		printf("%s: rolling my dice\n", s);  
+		dice =(int) time(&ss)%10 + 1;  
+		printf("%s: got %d points\n", s, dice); 
+    	        points+=dice;
+		printf("%s: Total so far %d\n\n", s, points);  
+
+		if(points >= 50){
+			printf("%s: game over I won, points=%d\n", s, points); 
+              		kill(0, SIGTERM);
+		}
+		sleep(1);	// to slow down the execution  
+
+		write(fd2, &turn, 1); //child write to fifo
+	}
+
+}
