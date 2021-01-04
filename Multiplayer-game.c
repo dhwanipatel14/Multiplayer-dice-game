@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 	pipe(fd2); 
 
 	if(!fork()) {
-		player("1st player", fd1, fd2);
+		player1("1st player", fd1, fd2);
     }
 
 	close(fd1[0]); // parent not read from fd1,( parent only write to pipe 1 )
@@ -124,7 +124,7 @@ void signal_handler(int signo){
 
 void player2(int pid) {  
 
-	signal(SIGUSR1, child_sigusr1_handler);
+	signal(SIGUSR1, signal_handler);
 	while(1)
 	 pause();
 	  
