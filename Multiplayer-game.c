@@ -37,7 +37,6 @@ int main(int argc, char *argv[]){
 
 	signal(SIGUSR1, signal_handler);
 
-   //-------------------------------------------------------------------
    //the code below is to create the 3rd player and its related fifo
 	unlink("../3rdplayer1.fifo"); // delete it if it exists  
 	unlink("../3rdplayer2.fifo"); // delete it if it exists  
@@ -48,7 +47,7 @@ int main(int argc, char *argv[]){
 		exit(1);
 
 	if(!fork()) //another child process, for the 3rd  player
-		player_fifo("3rd player");
+		player3("3rd player");
 
 	int fdp3 = open("../3rdplayer1.fifo", O_WRONLY);  
 	int fdp4 = open("../3rdplayer2.fifo", O_RDONLY);  
@@ -71,4 +70,55 @@ int main(int argc, char *argv[]){
 		write(fdp3, &turn, 1);
 		read(fdp4,  &turn, 1);   
 
+   }
+}
+
+void player1(char *s, int *fd1, int *fd2){  
+
+	int points=0;
+	int dice;
+	long int ss=0;  
+	
+	char turn;  
+	close(fd1[1]);
+	close(fd2[0]);  
+	
+	while(1){ 
+		read(fd1[0], &turn, 1);   //child read from pipe1 ,ie fd1
+
+		printf("%s: rolling my dice\n", s);  
+		dice =(int) time(&ss)%10 + 1;  
+		printf("%s: got %d points\n", s, dice); 
+	     points+=dice;
+		printf("%s: Total so far %d\n\n", s, points);  
+		if(points >= 50){
+			printf("%s: game over I won, points=%d\n", s, points); 
+              		kill(0, SIGTERM);
+		}
+		sleep(1);	// to slow down the execution  
+		write(fd2[1], &turn, 1); //child write to pipe 2, ie fd2
 	}
+}
+
+void signal_handler(int signo){
+	static int points=0;	
+	int dice;
+	long int ss=0;  
+	
+	printf("2nd player: rolling my dice\n");  
+		dice =(int) time(&ss)%10 + 1;  
+		printf("2nd player: got %d points\n", dice); 
+    	        points+=dice;
+		printf("2nd player: Total so far %d\n\n", points);  
+ 	
+		if(points >= 50){
+			printf("3rd player: game over I won, points=%d\n", points); 
+              	kill(0, SIGTERM);
+		}
+		sleep(1);	// to slow down the execution  
+	
+		kill(getppid(),SIGUSR1); //wait up parent vis SIGUSR1
+
+
+}
+
