@@ -122,7 +122,15 @@ void signal_handler(int signo){
 
 }
 
-void player_fifo(char *s) {
+void player2(int pid) {  
+
+	signal(SIGUSR1, child_sigusr1_handler);
+	while(1)
+	 pause();
+	  
+}
+
+void player3(char *s) {
 
 	int fd1, fd2;
 
