@@ -1,2 +1,3 @@
 # Multiplayer-dice-game
-Dice game created using coordination of pipes, signals adn fifos in system programming.
+Created two versions of Dice game. First using coordination of pipes, signals adn fifos in system programming and second one using socket programming.
+
