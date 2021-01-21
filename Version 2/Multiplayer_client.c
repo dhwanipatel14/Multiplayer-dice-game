@@ -26,6 +26,7 @@ struct sockaddr_in servAdd;
 		fprintf(stderr, "connect() failed, exiting\n");
 		exit(3);
 	}
+
 	while(1) {
 		if (read(csd, message, 100)<0){
 			fprintf(stderr, "read() error\n");
@@ -38,7 +39,7 @@ struct sockaddr_in servAdd;
 			converted_number = htonl(dice);
 			write(server, &converted_number, sizeof(converted_number));
 		}
-		if (strcmp(message, "Game over: you won the game")==0){
+		if (strcmp(message, "Game over: you won  game")==0){
  			fprintf(stderr, "%s\n", "I won the game");
 			break;
 		}
