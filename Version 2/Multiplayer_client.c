@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+
 int main(int argc, char *argv[]){
 char message[100];
 long int ss=0;
@@ -26,7 +27,6 @@ struct sockaddr_in servAdd;
 		fprintf(stderr, "connect() failed, exiting\n");
 		exit(3);
 	}
-
 	while(1) {
 		if (read(csd, message, 100)<0){
 			fprintf(stderr, "read() error\n");
