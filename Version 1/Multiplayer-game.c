@@ -21,7 +21,6 @@ int main(int argc, char *argv[]){
     int fd1[2], fd2[2], fd3,fd4;  
 	char turn='T';
 	printf("This is a 3-player dice-game with a referee\n");  
-
     //First player uses pipes to communicate
 	pipe(fd1); 
 	pipe(fd2); 
